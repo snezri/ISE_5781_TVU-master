@@ -1,118 +1,132 @@
 package elements;
 
-import Primitives.Point3D;
-import Primitives.Ray;
-import Primitives.Vector;
+import Primitives.*;
 
 import static Primitives.Util.isZero;
 
+/**
+ *
+ */
 public class Camera {
-    Point3D p0;
-    private Vector vUp, vRight, vTo;
-    double width, heigth, distance;
 
-    /**
-     * Constructor - Construct the camera and normalize the vectors and create the normal vector
-     */
-    public Camera(Point3D p0, Vector vUp, Vector vTo) {
-        this.p0 = p0;
-        if(vUp.dotProduct(vTo)!=0)
-            throw new IllegalArgumentException("vUp and vTo are not orthogonals");
-        this.vUp=vUp.normalized();
-        this.vTo=vTo.normalized();
-        this.vRight=(vUp.crossProduct(vTo)).normalized();
+    Point3D _p0;
+    Vector _vTo;
+    Vector _vUp;
+    Vector _vRight;
+
+    //physical dimensions of the "screen"
+    private double _width;
+    private double _height;
+    private double _distance;       // distance between camera and the view plane
+
+    private Point3D getP0() {
+        return _p0;
+    }
+
+    private Vector getvTo() {
+        return _vTo;
+    }
+
+    private Vector getvUp() {
+        return _vUp;
+    }
+
+    private Vector getvRight() {
+        return _vRight;
+    }
+
+    public double getWidth() {
+        return _width;
+    }
+
+    public double getHeight() {
+        return _height;
+    }
+
+    private double getDistance() {
+        return _distance;
     }
 
     /**
-     * Vector getter
-     * @return vUp
+     * @param p0  eye of camera
+     * @param vTo vector opposite to Z axis
+     * @param vUp vector pointing towards Y axis
      */
-    public Vector getvUp() { return vUp; }
+    public Camera(Point3D p0, Vector vTo, Vector vUp) {
+
+        if (!isZero(vTo.dotProduct(vUp))) {
+            throw new IllegalArgumentException(" vto and vup are not orthogonal");
+        }
+
+        _p0 = new Point3D(p0.getX(), p0.getY(), p0.getZ());
+
+        _vTo = vTo.normalized();
+        _vUp = vUp.normalized();
+
+        _vRight = _vTo.crossProduct(_vUp).normalize();
+    }
 
     /**
-     * Vector getter
-     * @return vTo
+     * @param width
+     * @param height
+     * @return
      */
-    public Vector getvTo() { return vTo; }
-
-    /**
-     * Vector getter
-     * @return vRight
-     */
-    public Vector getvRight() { return vRight; }
-
-    /**
-     * Vector getter
-     * @return P0
-     */
-    public Point3D getP0() { return p0;}
-
-    /**
-     * Vector getter
-     * @return Height
-     */
-    public double getHeight(){return heigth;}
-
-    /**
-     * Vector getter
-     * @return Width
-     */
-    public double getWidth(){return width;}
-
-    /**
-     * Vector getter
-     * @return Distance
-     */
-    public double getDistance(){return distance;}
-
-
-    /**
-     * Vector setter
-     * @param height , width
-     */
-    public Camera setViewPlaneSize(double width, double height){
-        this.width=width;
-        this.heigth=height;
+    public Camera setViewPlaneSize(double width, double height) {
+        _width = width;
+        _height = height;
         return this;
     }
 
     /**
-     * Vector setter
-     * @param distance
+     * @param distance-field
+     * @return the camera-builder pattern(chaining)
      */
-    public Camera setDistance(double distance){
-        this.distance=distance;
+    public Camera setDistance(double distance) {
+        try {
+            if (isZero(distance)) {
+                throw new IllegalArgumentException("can not be 0");
+            }
+            _distance = distance;
+        } catch (Exception e) {
+            System.out.println(" distans can not be 0");
+        }
         return this;
     }
 
-    /**
-     *constructing a ray passing through a pixel
-     */
     public Ray constructRayThroughPixel(int nX, int nY, int j, int i) {
-        Point3D Pc = p0.add(vTo.scale(distance));
 
-        double Rx = width / nX;
-        double Ry = heigth / nY;
+        Point3D pc = _p0.add(_vTo.scale(_distance));
 
-        Point3D Pij = Pc;
-
-        double Xj = (j - (nX - 1) / 2d) * Rx;
-        double Yi = -(i - (nY - 1) / 2d) * Ry;
-
-        if (isZero(Xj) && isZero(Yi)) {
-            return new Ray(p0, Pij.substract(p0));
-        }
-        if (isZero(Xj)) {
-            Pij = Pij.add(vUp.scale(Yi));
-            return new Ray(p0, Pij.substract(p0));
-        }
-        if (isZero(Yi)) {
-            Pij = Pij.add(vRight.scale(Xj));
-            return new Ray(p0, Pij.substract(p0));
+        if (isZero(nX) || isZero(nY)) {
+            throw new IllegalArgumentException("can not be 0");
         }
 
-        Pij = Pij.add(vRight.scale(Xj).add(vUp.scale(Yi)));
-        return new Ray(p0, Pij.substract(p0));
+        double ry = _height / nY;
+        double rx = _width / nX;
+
+       /* double xj = (i - nX / 2.0) * rx + rx / 2.0;
+        double yi = (j - nY / 2.0) * ry + ry / 2.0;*/
+
+        double yi = -(((i - ((nY - 1) / 2d)))*ry);
+        double xj = ((j - ((nX - 1) / 2d)))*rx;
+
+        Point3D Pij = pc;
+
+
+        if (!isZero(xj)) {
+            Pij=Pij.add(_vRight.scale(xj));
+        }
+
+
+        if (!isZero(yi)) {
+            Pij=Pij.add(_vUp.scale(yi));
+        }
+
+
+        Vector v = Pij.substract(_p0);
+
+
+        return new Ray(_p0, v);
 
     }
 }
