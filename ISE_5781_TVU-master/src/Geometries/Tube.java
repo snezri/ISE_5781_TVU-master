@@ -1,58 +1,77 @@
 package Geometries;
+import Primitives.Point3D;
+import Primitives.Ray;
+import Primitives.Vector;
 
-import Primitives.*;
-
+import java.util.ArrayList;
 import java.util.List;
 
 import static Primitives.Util.alignZero;
 import static Primitives.Util.isZero;
 
-public class Tube extends Geometry{
-    Ray axisRay;
-    double radius;
-    /**
-     * Tube constructor to create a tube with a axis ray and a radius
-     * @param R
-     * @param rad
-     */
 
-    public Tube(Ray R, double rad){
-        this.axisRay=R;
-        this.radius=rad;
+
+public class Tube extends RadialGeometry {
+
+    protected Ray _axisRay;
+
+
+    public Tube( double radius, Ray axisRay) {
+        super(radius);
+        _axisRay = axisRay;
     }
 
-    public Ray getAxisRay() {
-        return axisRay;
+    private Ray getAxisRay() {
+        return _axisRay;
     }
 
-    public double getRadius() {
-        return radius;
+    private double getRadius() {
+        return _radius;
     }
 
     @Override
     public String toString() {
-        return "Tube{" + "axisRay=" + axisRay + ", radius=" + radius + '}'; }
+        return "Tube{" +
+                "_axisRay=" + _axisRay +
+                ", _radius=" + _radius +
+                '}';
+    }
+    /* normal vector of a Tube
+     *  */
+    public Vector getNormal(Point3D point){
+        Point3D p0=_axisRay.getPoint3D();
 
+        Vector p1 = point.substract(p0);
+
+        Vector p2=_axisRay.getDir();
+
+        double x =alignZero( p2.dotProduct(p1));
+        if(isZero(x)){
+            return p1;
+        }
+        Point3D O = _axisRay.getPoint3D().add(p1.scale(x));
+        if(O.equals(point)){
+            throw new IllegalArgumentException("point can not be reference point of tube");
+        }
+
+        Vector N = point.substract(O);
+
+        return N.normalize();
+    }
 
     @Override
-    public Vector getNormal(Point3D p) {
-        Point3D P0 = axisRay.getPoint3D();
-        Vector v = axisRay.getDir();
-        Vector P0_P = p.substract(P0);
-        double t = alignZero(v.dotProduct(P0_P));
-        if (isZero(t)) {
-            return P0_P.normalize();
-        }
-        Point3D o = P0.add(v.scale(t));
-        if (p.equals(o)) {
-            throw new IllegalArgumentException("point can't be on the tube axis");
-        }
-        Vector n = p.substract(o).normalize();
-        return n;
+    public List<Point3D> findIntersections(Ray ray) {
+        return null;
     }
 
     @Override
     public List<GeoPoint> findGeoIntersections(Ray ray) {
-        return null;
+        List<Point3D> intersections = findIntersections(ray);
+        if (intersections == null) return null;
+        List<GeoPoint> result = new ArrayList<>();
+        for (Point3D p : intersections) {
+            result.add(new GeoPoint(this, p));
+        }
+        return result;
     }
 }

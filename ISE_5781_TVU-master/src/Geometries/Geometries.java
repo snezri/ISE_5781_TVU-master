@@ -3,39 +3,79 @@ package Geometries;
 import Primitives.Point3D;
 import Primitives.Ray;
 
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 
 public class Geometries implements Intersectable {
 
-    private List<Intersectable> listGeo;
+    List<Intersectable>Intersectable;
 
     public Geometries() {
-        listGeo =new LinkedList<Intersectable>();
+        Intersectable=new LinkedList<>();
     }
 
-    public Geometries(Intersectable... intersectables) {
-        listGeo = List.of(intersectables);
+    public void add(Intersectable... intersectables) {
+        for (Intersectable Item:intersectables) {
+            this.Intersectable.add(Item);
+        }
     }
 
-    public void add(Intersectable... geometries) {
-        for (Intersectable i:geometries)
-            listGeo.add(i);
+    public Geometries(Intersectable...Intersectables) {
+        for (Intersectable Item:Intersectables) {
+            this.Intersectable=new LinkedList<>();
+            add(Intersectables);
+
+        }
+    }
+    @Override
+    public List<Point3D> findIntersections(Ray ray) {
+        List<Point3D> result = null;
+        for(Intersectable element: Intersectable)
+        {
+            List<Point3D>elemList = element.findIntersections(ray);
+            if(elemList != null) {
+                if(result == null) {
+                    result = new LinkedList<>();
+                }
+
+                result.addAll(elemList);
+            }
+        }
+
+        return result;
     }
 
     @Override
     public List<GeoPoint> findGeoIntersections(Ray ray) {
-        LinkedList<GeoPoint> intersections = new LinkedList<GeoPoint>();
-        for (Intersectable i : listGeo) {
-            if (i.findGeoIntersections(ray) != null)
-                for (GeoPoint p : i.findGeoIntersections(ray))
-                    intersections.add(p);
-        }
-        if (intersections.isEmpty())
-            return null;
-        return intersections;
-    }
+        List<GeoPoint> result = null;
+        for(Intersectable element: Intersectable)
+        {
+            List<Point3D>elemList = element.findIntersections(ray);
+            if(elemList != null) {
+                if(result == null) {
+                    result = new LinkedList<>();
+                }
 
+                for (Point3D p: elemList) {
+                    if (element instanceof Geometry) {
+                        result.add(new GeoPoint((Geometry) element, p));
+                    }
+                }
+            }
+        }
+        return result;
+    }
+    /*@Override
+    public List<Point3D> findIntersections(Ray ray) {
+        List<Point3D> intersections = null;
+        for (Intersectable geometry :Intersectable) {
+            List<Point3D> tempIntersections = geometry.findIntersections(ray);
+            if (tempIntersections != null) {
+                if (intersections == null)
+                    intersections = new ArrayList<Point3D>();
+                intersections.addAll(tempIntersections);
+            }
+        }
+        return intersections;
+    }*/
 }

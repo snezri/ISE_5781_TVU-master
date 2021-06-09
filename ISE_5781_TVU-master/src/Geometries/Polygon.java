@@ -1,12 +1,9 @@
 package Geometries;
 
-import Primitives.Point3D;
-import Primitives.Ray;
-import Primitives.Vector;
-
+import java.util.ArrayList;
 import java.util.List;
-
-import static Primitives.Util.isZero;
+import Primitives.*;
+import static Primitives.Util.*;
 
 /**
  * Polygon class represents two-dimensional polygon in 3D Cartesian coordinate
@@ -18,7 +15,7 @@ public class Polygon extends Geometry {
 	/**
 	 * List of polygon's vertices
 	 */
-	protected List<Point3D> vertices;
+	public List<Point3D> vertices;
 	/**
 	 * Associated plane in which the polygon lays
 	 */
@@ -52,7 +49,9 @@ public class Polygon extends Geometry {
 		// Generate the plane according to the first three vertices and associate the
 		// polygon with this plane.
 		// The plane holds the invariant normal (orthogonal unit) vector to the polygon
-		plane = new Plane(vertices[0], vertices[1], vertices[2]);
+		plane = new Plane(vertices[0],
+				vertices[1],
+				vertices[2]);
 		if (vertices.length == 3)
 			return; // no need for more tests for a Triangle
 
@@ -90,8 +89,46 @@ public class Polygon extends Geometry {
 		return plane.getNormal();
 	}
 
+	/**
+	 * find intersections point3D with polygon
+	 * @param ray ray for casting
+	 * @return list of intersections point3D or null if there were not found
+	 */
+	@Override
+	public List<Point3D> findIntersections(Ray ray) {
+		List<Point3D> intersections = plane.findIntersections(ray);
+		if (intersections == null) return null;
+
+		Point3D p0 = ray.getPoint3D();
+		Vector v = ray.getDir();
+
+		Vector v1  = vertices.get(1).substract(p0);
+		Vector v2 = vertices.get(0).substract(p0);
+		double sign = v.dotProduct(v1.crossProduct(v2));
+		if (isZero(sign))
+			return null;
+
+		boolean positive = sign > 0;
+
+		for (int i = vertices.size() - 1; i > 0; --i) {
+			v1 = v2;
+			v2 = vertices.get(i).substract(p0);
+			sign = alignZero(v.dotProduct(v1.crossProduct(v2)));
+			if (isZero(sign)) return null;
+			if (positive != (sign >0)) return null;
+		}
+
+		return intersections;
+	}
+
 	@Override
 	public List<GeoPoint> findGeoIntersections(Ray ray) {
-		return null;
+		List<Point3D> intersections = findIntersections(ray);
+		if (intersections == null) return null;
+		List<GeoPoint> result = new ArrayList<>();
+		for (Point3D p : intersections) {
+			result.add(new GeoPoint(this, p));
+		}
+		return result;
 	}
 }

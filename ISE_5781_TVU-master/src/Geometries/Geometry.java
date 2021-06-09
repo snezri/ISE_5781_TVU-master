@@ -2,50 +2,50 @@ package Geometries;
 
 import Primitives.*;
 
-/**
- *Geometry interface for all the geometries that have a normal
- */
-
 public abstract class Geometry implements Intersectable {
 
-    private Material material= new Material();
-    protected Color emission=Color.BLACK;
+    /**
+     * The emission light of this geometry
+     */
+    protected Color emission = Color.BLACK;
+
+    private Material material = new Material();
+
+    /**
+     * Get normal function.
+     * @param point of geometry shape.
+     * @return the normal of each geometry shape.
+     */
+    public abstract Vector getNormal(Point3D point);
 
 
     /**
-     * @return the material
+     * Setter method for the emission field
+     * of this geometry.
+     * The method is in a form af builder pattern.
+     * @param color The color to be set for the emission
+     * @return The object instance.
      */
+    public Geometry setEmission(Color color) {
+        emission = new Color(color);
+        return this;
+    }
+
+    public Geometry setMaterial(Material m) {
+        material = m;
+        return this;
+    }
+
     public Material getMaterial() {
         return material;
     }
 
     /**
-     * @return the emission
+     * Getter for the emission field of this geometry
+     * @return The emission of this geometry
      */
     public Color getEmission() {
-        return emission;
+        return new Color(emission);
     }
-
-    /**
-     * @param material: the material to set
-     */
-    public Geometry setMaterial(Material material) {
-        this.material = material;
-        return this;
-    }
-
-    /**
-     * @param emission: the emission to set
-     */
-    public Geometry setEmission(Color emission) {
-        this.emission = emission;
-        return this;
-    }
-
-    /**
-     *function to find the normal in a point
-     *@param myPoint3D
-     *@return the normal of the geometry
-     */
-    public abstract Vector getNormal(Point3D myPoint3D);
 }
+

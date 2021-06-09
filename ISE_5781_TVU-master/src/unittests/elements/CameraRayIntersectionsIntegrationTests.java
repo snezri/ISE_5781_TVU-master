@@ -10,7 +10,6 @@ import Primitives.Vector;
 import elements.Camera;
 import org.junit.Test;
 
-import java.sql.Array;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -85,24 +84,24 @@ public class CameraRayIntersectionsIntegrationTests {
         //TC01: 2 intersections
         ArrayList<Ray> ray1= RayConstruction(cam1);
         assertEquals(" Was supposed to be 2 intersections",
-                2,countIntersections(ray1,new Sphere(new Point3D(0,0,-3),1)));
+                2,countIntersections(ray1,new Sphere(1, new Point3D(0,0,-3))));
 
         // TC02: 18 intersections points
         ArrayList<Ray> ray2= RayConstruction(cam2);
         assertEquals(" Was supposed to be 18 intersections",
-                18,countIntersections(ray2,new Sphere(new Point3D(0,0,-2.5),2.5)));
+                18,countIntersections(ray2,new Sphere(2.5, new Point3D(0,0,-2.5))));
 
         // TC03: 10 intersections points
         assertEquals(" Was supposed to be 10 intersections",
-                10,countIntersections(ray2,new Sphere(new Point3D(0,0,-2),2)));
+                10,countIntersections(ray2,new Sphere(2, new Point3D(0,0,-2))));
 
         // TC04: 9 intersections points
         assertEquals(" Was supposed to be 9 intersections",
-                10,countIntersections(ray1,new Sphere(new Point3D(0,0,-1),4)));
+                10,countIntersections(ray1,new Sphere(4, new Point3D(0,0,-1))));
 
         // TC05: No intersections points
         assertEquals(" Was supposed to be 0 intersections",
-                0,countIntersections(ray1,new Sphere(new Point3D(0,0,1),0.5)));
+                0,countIntersections(ray1,new Sphere(0.5, new Point3D(0,0,1))));
     }
 
     @Test

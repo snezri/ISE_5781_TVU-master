@@ -1,15 +1,16 @@
 package unittests.geometries;
 
-import java.util.List;
-import Geometries.*;
 import Geometries.Geometries;
-import Primitives.*;
+import Geometries.Plane;
+import Geometries.Sphere;
+import Geometries.Triangle;
+import Primitives.Point3D;
+import Primitives.Ray;
+import Primitives.Vector;
 import org.junit.Test;
 
-import java.awt.*;
-import java.io.LineNumberInputStream;
-
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 
 public class GeometriesTests {
 
@@ -19,7 +20,7 @@ public class GeometriesTests {
         Geometries emptyList=new Geometries();
         Plane Pl=new Plane(new Point3D(-4, 0, 0),new Vector(4,0,0));
         Triangle Tri=new Triangle(new Point3D(3, 2, 0), new Point3D(3, -2, 0), new Point3D(6, 0, 6));
-        Sphere Sph=new Sphere(new Point3D(1,0,0),1);
+        Sphere Sph=new Sphere(1, new Point3D(1,0,0));
         geo.add(Pl);
         geo.add(Tri);
         geo.add(Sph);

@@ -1,96 +1,36 @@
 package Primitives;
 
+/**
+ * Representing material for objects
+ */
 public class Material {
-
-    public double kD = 0;
-    public double kS = 0;
-    public int nShininess =0;
-
-    /**
-     * Transparency coefficient
-     */
-    public double kT=0.0;
-
-    /**
-     * Reflection coefficient
-     */
-    public double kR=0.0;
-
-    /**
-     * @param kD the kD to set
-     */
-    public void setkD(double kD) {
-        this.kD = kD;
+    public double kD;
+    public double kS;
+    public int nShininess;
+    public double kT=0.0;//refraction both fields between 0 to 1
+    public double kR=0.0;//reflection both fields between 0 to
+    public Material setKd(double _kd) {
+        kD = _kd;
+        return this;
     }
-
-    /**
-     * @param kS the kS to set
-     */
-    public void setkS(double kS) {
-        this.kS = kS;
+    public Material setKs(double _ks) {
+        kS = _ks;
+        return this;
     }
-
-    /**
-     * @param kT the kT to set
-     */
-    public Material setkT(double kT) {
-        this.kT = kT;
+    public Material setkT(double kt) {
+        this.kT = kt;
         return this;
     }
 
-    /**
-     * @param kR the kR to set
-     */
-    public Material setkR(double kR) {
-        this.kR = kR;
+    public Material setkR(double kr) {
+        this.kR = kr;
         return this;
     }
-
-    /**
-     * Material constructor
-     *
-     * @param kD
-     * @param kS
-     * @param nShininess
-     */
-    public Material(double kD, double kS, int nShininess) {
-        this.kD = kD;
-        this.kS = kS;
-        this.nShininess = nShininess;
+    public Material setnShininess(int ns) {
+        nShininess = ns;
+        return this;
     }
-
-    /**
-     * Material default constructor
-     *
-     */
     public Material() {
-        this.kD = 0;
-        this.kS = 0;
-        this.nShininess = 0;
+        kD = kS = nShininess = 0;
     }
-
-    /**
-     * @param kD the kD to set
-     */
-    public Material setKd(double kD) {
-        this.kD = kD;
-        return this;
-    }
-
-    /**
-     * @param kS the kS to set
-     */
-    public Material setKs(double kS) {
-        this.kS = kS;
-        return this;
-    }
-
-    /**
-     * @param nShininess the nShininess to set
-     */
-    public Material setnShininess(int nShininess) {
-        this.nShininess = nShininess;
-        return this;
-    }
-
 }

@@ -1,109 +1,105 @@
 package Geometries;
 
 import Primitives.*;
+
+import java.util.ArrayList;
 import java.util.List;
 
+import static Primitives.Util.alignZero;
+import static Primitives.Util.isZero;
 
 public class Plane extends Geometry {
-    private Point3D p0;
-    private Vector normal;
+    Point3D p;
+    Vector _normal;
+
+    @Override
+    public String toString() {
+        return "Plane{" +
+                "p=" + p +
+                ", normal=" + _normal +
+                '}';
+    }
 
     /**
-     * Plane constructor to create a plane with 3 points
-     *
-     * @param p1
-     * @param p2
-     * @param p3
+     * @param p1 point 1
+     * @param p2 point 2
+     * @param p3 point 3
      */
-    public Plane(Point3D p1, Point3D p2, Point3D p3){
-        this.p0=p1;
-        Vector v1= p2.substract(p1);
-        Vector v2=p3.substract(p2);
-        normal=(v1.crossProduct(v2)).normalize();
-    }
-    /**
-     * Plane constructor to create a plane with a point and a normal
-     *
-     * @param p
-     * @param v
-     */
-    public Plane(Point3D p, Vector v){
-        this.p0=p;
-        this.normal=v;
+    /*public Plane(Point3D p1, Point3D p2, Point3D p3) {
+        Vector U = new Vector (p1, p2);
+        Vector V = new Vector (p1, p3);
+        Vector N = U.crossProduct(V);
+
+        N.normalize();
+
+        this.normal=N.scale(-1);
+        this.p=p1;
+    }*/
+    public Plane(Point3D p1, Point3D p2, Point3D p3) {
+        super();
+        p = p1;
+
+        Vector u = p2.substract(p1);
+        Vector v = p3.substract(p1);
+
+        Vector n = u.crossProduct(v);
+
+        _normal = n.normalized();
     }
 
-    public Point3D getPoint3D(){ return p0;}
-    public Vector getVector(){ return normal;}
-    public void setPoint3d(Point3D point3d) {
-        this.p0= point3d;
+    public Plane(Point3D p1, Vector normal) {
+        super();
+        this.p = p1;
+        this._normal = normal.normalized();
     }
-    public void setVector(Vector normal) {
-        this.normal = normal;
+
+    /**
+     * @param point of Point3D in plane
+     * @return Normal for plane
+     */
+    @Override
+    public Vector getNormal(Point3D point) {
+        return _normal;
+    }
+
+    /*because polygon
+     * @return vector normal in a plane
+     */
+    public Vector getNormal() {
+        return getNormal(new Point3D(0, 0, 0));
+    }
+
+    /********getter********/
+    public Point3D getP() {
+        return p;
     }
 
     @Override
-    public String toString() { return "Plane{" +
-                "p0=" + p0 +
-                ", normal=" + normal +
-                '}'; }
-
-    @Override
-    public Vector getNormal(Point3D p) {
-        return normal;
-    }
-
-    public Vector getNormal() { return null;}
-
-    /**
-     * @param ray
-     * @return
-     */
-    @Override
-    public List<GeoPoint> findGeoIntersections(Ray ray) {
-        if(ray.getPoint3D().equals(p0))
-            return null;
-
-        //denominator == 0
-        if(Util.isZero(normal.dotProduct(ray.getDir()))) 		//if the plane is parallel to the ray
-            return null;
-
-        //numerator == 0
-        if (Util.isZero(normal.dotProduct(ray.getPoint3D().substract(p0))))
-            return null;
-
-        else
-        {
-            double t=Util.alignZero((normal.dotProduct(ray.getPoint3D().substract(p0)))/(normal.dotProduct(ray.getDir())));
-            if (t<0)
-                return null;
-            else
-            {
-                return List.of(new GeoPoint(this, ray.getPoint(t)));
-            }
+    public List<Point3D> findIntersections(Ray ray) {
+        Vector p0Q;
+        try {
+            p0Q = p.substract(ray.getPoint3D());
+        } catch (IllegalArgumentException e) {
+            return null; // ray starts from point Q - no intersections
         }
 
+        double nv = _normal.dotProduct(ray.getDir());
+        if (isZero(nv)) // ray is parallel to the plane - no intersections
+            return null;
+
+        double t = alignZero(_normal.dotProduct(p0Q) / nv);
+
+        return t <= 0 ? null : List.of(ray.getPoint(t));
     }
 
-
     @Override
-    public boolean equals(Object obj) {
-        if (this == obj)
-            return true;
-        if (obj == null)
-            return false;
-        if (getClass() != obj.getClass())
-            return false;
-        Plane other = (Plane) obj;
-        if (p0 == null) {
-            if (other.p0 != null)
-                return false;
-        } else if (!p0.equals(other.p0))
-            return false;
-        if (normal == null) {
-            if (other.normal != null)
-                return false;
-        } else if (!normal.equals(other.normal))
-            return false;
-        return true;
+    public List<GeoPoint> findGeoIntersections(Ray ray) {
+        List<Point3D> intersections = findIntersections(ray);
+        if (intersections == null) return null;
+        List<GeoPoint> result = new ArrayList<>();
+        for (Point3D p : intersections) {
+            result.add(new GeoPoint(this, p));
+        }
+        return result;
     }
 }

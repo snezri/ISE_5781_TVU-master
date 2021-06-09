@@ -1,6 +1,6 @@
 package unittests.geometries;
 
-import Geometries.Cylinder;
+import Geometries.cylinder;
 import Primitives.Point3D;
 import Primitives.Ray;
 import Primitives.Vector;
@@ -12,7 +12,7 @@ public class CylinderTest {
 
     @Test
     public void testGetNormal() {
-        Cylinder Cyl=new Cylinder(new Ray(new Point3D(0, 0, 0), new Vector(0, 0, 1)), 2, 6);
+        cylinder Cyl=new cylinder(2,new Ray(new Point3D(0, 0, 0), new Vector(0, 0, 1)), 6);
         Vector v1=new Vector(0, 1, 0);
         Vector v2=new Vector(0, 0, 6);
         Vector v3=new Vector(0, 0, -1);
