@@ -1,5 +1,8 @@
 package Primitives;
-
+/**
+ * @author Dina Hayoun and Sarah Nezri
+ *
+ */
 import java.util.List;
 
 import static Primitives.Util.isZero;

@@ -1,5 +1,8 @@
 package Primitives;
-
+/**
+ * @author Dina Hayoun and Sarah Nezri
+ *
+ */
 public class Point3D {
 
     Coordinate x;

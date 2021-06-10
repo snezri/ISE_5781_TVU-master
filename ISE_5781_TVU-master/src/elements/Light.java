@@ -4,7 +4,7 @@ import Primitives.Color;
 
 /**
  * Abstract Class Light
- *
+ * @author Dina Hayoun and Sarah Nezri
  */
 abstract class Light {
 

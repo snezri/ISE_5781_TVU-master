@@ -8,6 +8,10 @@ import java.util.List;
 import static Primitives.Util.alignZero;
 import static Primitives.Util.isZero;
 
+/**
+ * @author Dina Hayoun and Sarah Nezri
+ *
+ */
 public class Plane extends Geometry {
     Point3D p;
     Vector _normal;

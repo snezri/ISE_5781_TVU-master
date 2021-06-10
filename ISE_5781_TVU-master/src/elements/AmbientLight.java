@@ -2,7 +2,10 @@ package elements;
 
 import Primitives.Color;
 
-
+/**
+ * @author Dina Hayoun and Sarah Nezri
+ *
+ */
 public class AmbientLight extends Light {
 
     /**

@@ -12,6 +12,8 @@ import java.util.List;
 /**
  * The Scene class is a PDS (Passive Data Structure) means it is here only to keep the elements.
  * That's why all the attributes are public. There are no getter functions.
+ *
+ * @author Dina Hayoun and Sarah Nezri
  */
 public class Scene {
     public String name;

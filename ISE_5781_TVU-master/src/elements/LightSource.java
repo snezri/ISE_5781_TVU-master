@@ -6,6 +6,7 @@ import Primitives.Vector;
 
 /**
  *Interface LightSource
+ * @author Dina Hayoun and Sarah Nezri
  */
 public interface LightSource {
 

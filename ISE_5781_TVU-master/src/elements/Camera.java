@@ -5,6 +5,7 @@ import Primitives.*;
 import static Primitives.Util.isZero;
 
 /**
+ * @author Dina Hayoun and Sarah Nezri
  *
  */
 public class Camera {

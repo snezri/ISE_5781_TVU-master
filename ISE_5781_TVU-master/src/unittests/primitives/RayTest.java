@@ -9,7 +9,10 @@ import java.util.LinkedList;
 import java.util.List;
 
 import static org.junit.Assert.*;
-
+/**
+ * @author Dina Hayoun and Sarah Nezri
+ *
+ */
 public class RayTest {
 
     @Test

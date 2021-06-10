@@ -18,6 +18,8 @@ public class AllEffectsTests {
     /**
      * Produce a picture of a two triangles lighted by a spot light with a partially
      * transparent Sphere producing partial shadow
+     *
+     * @author Dina Hayoun and Sarah Nezri
      */
     @Test
     public void newImage() {

@@ -5,6 +5,11 @@ import Primitives.Ray;
 
 import java.util.List;
 
+/**
+ * @author Dina Hayoun and Sarah Nezri
+ *
+ */
+
 public class cylinder extends Tube {
 
     double height;

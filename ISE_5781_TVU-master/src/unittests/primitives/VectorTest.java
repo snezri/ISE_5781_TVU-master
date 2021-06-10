@@ -5,7 +5,10 @@ import org.junit.Test;
 
 import static Primitives.Util.isZero;
 import static org.junit.Assert.*;
-
+/**
+ * @author Dina Hayoun and Sarah Nezri
+ *
+ */
 public class VectorTest {
 
     @Test
@@ -58,7 +61,7 @@ public class VectorTest {
     }
 
     /**
-     * Test method for {@link Primitives.Vector#crossProduct(Primitives.Vector)}.
+     * Test method for {@link Vector#crossProduct(Vector)}.
      */
     @Test
     public void testCrossProduct() {
@@ -78,12 +81,12 @@ public class VectorTest {
 
         // =============== Boundary Values Tests ==================
         // TC11: test zero vector from cross-product of co-lined vectors
-         try {
-             v1.crossProduct(v2);
-             fail("crossProduct() for parallel vectors does not throw an exception");
-          } catch (Exception e) {}
+        try {
+            v1.crossProduct(v2);
+            fail("crossProduct() for parallel vectors does not throw an exception");
+        } catch (IllegalArgumentException e) {
+        }
     }
-
 
 
     @Test

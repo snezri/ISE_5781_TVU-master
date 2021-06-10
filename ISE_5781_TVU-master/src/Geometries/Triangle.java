@@ -6,7 +6,10 @@ import java.util.List;
 
 import static Primitives.Util.isZero;
 
-
+/**
+ * @author Dina Hayoun and Sarah Nezri
+ *
+ */
 public class Triangle extends Polygon {
 
     Point3D _p1;//the first point of the triangle

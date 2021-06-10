@@ -11,7 +11,10 @@ import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 
-
+/**
+ * @author Dina Hayoun and Sarah Nezri
+ *
+ */
 public class IntersectionTest {
     /**
      * a function that help us calculte the sum of intersaction in the integration tests

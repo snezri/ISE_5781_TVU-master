@@ -7,7 +7,10 @@ import Primitives.Vector;
 import org.junit.Test;
 
 import static org.junit.Assert.*;
-
+/**
+ * @author Dina Hayoun and Sarah Nezri
+ *
+ */
 public class CylinderTest {
 
     @Test

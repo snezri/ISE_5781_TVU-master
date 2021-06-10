@@ -1,5 +1,8 @@
 package Primitives;
-
+/**
+ * @author Dina Hayoun and Sarah Nezri
+ *
+ */
 public class Vector {
     Point3D head;
 
@@ -55,8 +58,11 @@ public class Vector {
         return this.head.x.coord*v1.head.x.coord+this.head.y.coord*v1.head.y.coord+this.head.z.coord*v1.head.z.coord;
     }
 
-    public Vector crossProduct(Vector v){
-        return new Vector((this.head.y.coord)*(v.head.z.coord)-(this.head.z.coord)*(v.head.y.coord),(this.head.z.coord)*(v.head.x.coord)-(this.head.x.coord)*(v.head.z.coord), (this.head.x.coord)*(v.head.y.coord)-(this.head.y.coord)*(v.head.x.coord));
+    public Vector crossProduct(Vector v) {
+        double w1 = this.head.y.coord * v.head.z.coord - this.head.z.coord * v.head.y.coord;
+        double w2 = this.head.z.coord * v.head.x.coord - this.head.x.coord * v.head.z.coord;
+        double w3 = this.head.x.coord * v.head.y.coord - this.head.y.coord * v.head.x.coord;
+        return new Vector( new Point3D(w1, w2, w3));
     }
 
     public double lengthSquared(){

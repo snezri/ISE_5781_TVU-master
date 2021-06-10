@@ -2,6 +2,7 @@ package Primitives;
 
 /**
  * Representing material for objects
+ * @author Dina Hayoun and Sarah Nezri
  */
 public class Material {
     public double kD;

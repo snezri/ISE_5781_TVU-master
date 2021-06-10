@@ -10,7 +10,7 @@ import java.util.List;
 
 /**
  * Class RayTracerBasic
- *
+ * @author Dina Hayoun and Sarah Nezri
  */
 public class RayTracerBasic extends RayTracerBase {
     private static final int MAX_CALC_COLOR_LEVEL = 10;

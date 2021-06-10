@@ -3,9 +3,10 @@ package unittests.renderer;
 import Primitives.Color;
 import org.junit.Test;
 import renderer.ImageWriter;
-
-import static org.junit.Assert.*;
-
+/**
+ * @author Dina Hayoun and Sarah Nezri
+ *
+ */
 public class ImageWriterTest {
 
     @Test

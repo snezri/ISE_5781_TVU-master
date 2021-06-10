@@ -5,7 +5,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static Primitives.Util.alignZero;
-
+/**
+ * @author Dina Hayoun and Sarah Nezri
+ *
+ */
 public class Sphere extends RadialGeometry {
     protected Point3D _center;
 

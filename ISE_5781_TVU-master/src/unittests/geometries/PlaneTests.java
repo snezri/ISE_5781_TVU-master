@@ -9,7 +9,10 @@ import org.junit.Test;
 import java.util.List;
 
 import static org.junit.Assert.*;
-
+/**
+ * @author Dina Hayoun and Sarah Nezri
+ *
+ */
 public class PlaneTests {
     /**
      * Test method for {@link Geometries.Plane#getNormal(Primitives.Point3D)}.

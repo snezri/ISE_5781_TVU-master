@@ -6,7 +6,10 @@ import elements.Camera;
 import scene.Scene;
 
 import java.util.MissingResourceException;
-
+/**
+ * @author Dina Hayoun and Sarah Nezri
+ *
+ */
 public class Render {
     ImageWriter imageWriter;
     Camera camera;

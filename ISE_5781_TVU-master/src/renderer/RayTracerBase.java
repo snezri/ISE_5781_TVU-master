@@ -1,5 +1,8 @@
 package renderer;
-
+/**
+ * @author Dina Hayoun and Sarah Nezri
+ *
+ */
 import Primitives.Color;
 import Primitives.Ray;
 import scene.Scene;

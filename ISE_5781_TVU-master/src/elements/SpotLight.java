@@ -3,7 +3,10 @@ package elements;
 import Primitives.Color;
 import Primitives.Point3D;
 import Primitives.Vector;
-
+/**
+ * @author Dina Hayoun and Sarah Nezri
+ *
+ */
 public class SpotLight extends PointLight {
 
     private Vector direction;

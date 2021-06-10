@@ -3,7 +3,10 @@ package Geometries;
 import Primitives.*;
 
 import java.util.List;
-
+/**
+ * @author Dina Hayoun and Sarah Nezri
+ *
+ */
 public abstract class RadialGeometry extends Geometry {
     protected final double _radius;
 

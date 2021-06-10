@@ -10,7 +10,10 @@ import static Primitives.Util.alignZero;
 import static Primitives.Util.isZero;
 
 
-
+/**
+ * @author Dina Hayoun and Sarah Nezri
+ *
+ */
 public class Tube extends RadialGeometry {
 
     protected Ray _axisRay;

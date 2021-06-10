@@ -8,6 +8,8 @@ import java.util.stream.Collectors;
 
 /**
  * return list for Cutting points between a Ray and various bodies
+ *
+ * @author Dina Hayoun and Sarah Nezri
  */
 public interface Intersectable {
 

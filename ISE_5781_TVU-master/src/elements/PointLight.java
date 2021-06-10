@@ -5,6 +5,7 @@ import Primitives.Point3D;
 import Primitives.Vector;
 
 /**
+ * @author Dina Hayoun and Sarah Nezri
  *
  */
 public class PointLight extends Light implements LightSource {

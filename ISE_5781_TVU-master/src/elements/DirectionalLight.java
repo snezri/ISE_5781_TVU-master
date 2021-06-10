@@ -3,8 +3,8 @@ package elements;
 import Primitives.Color;
 import Primitives.Point3D;
 import Primitives.Vector;
-
 /**
+ * @author Dina Hayoun and Sarah Nezri
  *
  */
 public class DirectionalLight extends Light implements LightSource{

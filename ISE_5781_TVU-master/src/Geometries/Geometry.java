@@ -2,6 +2,10 @@ package Geometries;
 
 import Primitives.*;
 
+/**
+ * @author Dina Hayoun and Sarah Nezri
+ *
+ */
 public abstract class Geometry implements Intersectable {
 
     /**

@@ -11,7 +11,10 @@ import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
-
+/**
+ * @author Dina Hayoun and Sarah Nezri
+ *
+ */
 public class GeometriesTests {
 
     @Test
