@@ -1,7 +1,14 @@
 package elements;
 
-import Primitives.*;
+import Primitives.Point3D;
+import Primitives.Ray;
+import Primitives.Vector;
 
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Random;
+
+import static Primitives.Util.alignZero;
 import static Primitives.Util.isZero;
 
 /**
@@ -19,6 +26,8 @@ public class Camera {
     private double _width;
     private double _height;
     private double _distance;       // distance between camera and the view plane
+    private double _depthOfField;
+    private double _dOFRadius;
 
     private Point3D getP0() {
         return _p0;
@@ -46,6 +55,24 @@ public class Camera {
 
     private double getDistance() {
         return _distance;
+    }
+
+    public double get_depthOfField() {
+        return _depthOfField;
+    }
+
+    public Camera set_depthOfField(double _depthOfField) {
+        this._depthOfField = _depthOfField;
+        return this;
+    }
+
+    public double get_dOFRadius() {
+        return _dOFRadius;
+    }
+
+    public Camera set_dOFRadius(int _dOFRadius) {
+        this._dOFRadius = _dOFRadius;
+        return this;
     }
 
     /**
@@ -129,5 +156,55 @@ public class Camera {
 
         return new Ray(_p0, v);
 
+    }
+
+
+    public List<Ray> constructRaysGridFromCamera(int n, int m, Ray ray) {
+
+        List<Ray> myRays = new LinkedList<>();
+
+        double t0 = _depthOfField + _distance;
+        double t = t0/(_vTo.dotProduct(ray.getDir()));
+        Point3D point = ray.getPoint(t);
+
+        double pixelSize = alignZero((_dOFRadius * 2) / n);
+
+
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < m; j++) {
+                Ray tmpRay = constructRayFromPixel(n, m, j, i, pixelSize, point);
+                if (tmpRay.getPoint3D().equals(_p0)){
+                    myRays.add(tmpRay);
+                }
+                else if (tmpRay.getPoint3D().substract(_p0).dotProduct(tmpRay.getPoint3D().substract(_p0)) <= _dOFRadius * _dOFRadius){
+                    myRays.add(tmpRay);
+                }
+            }
+        }
+
+        return myRays;
+    }
+
+
+
+    private Ray constructRayFromPixel(int nX, int nY, double j, double i, double pixelSize, Point3D point) {
+
+        Point3D pIJ = new Point3D(_p0);
+
+        Random r = new Random();
+
+        double xJ = ((j + r.nextDouble() / (r.nextBoolean() ? 2 : -2)) - ((nX - 1) / 2d)) * pixelSize;
+        double yI = -((i + r.nextDouble() / (r.nextBoolean() ? 2 : -2)) - ((nY - 1) / 2d)) * pixelSize;
+
+        if (xJ != 0) {
+            pIJ = pIJ.add(_vRight.scale(xJ));
+        }
+        if (yI != 0) {
+            pIJ = pIJ.add(_vUp.scale(yI));
+        }
+
+        Vector vIJ = point.substract(pIJ);
+
+        return new Ray(pIJ, vIJ);
     }
 }

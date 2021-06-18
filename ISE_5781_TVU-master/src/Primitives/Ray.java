@@ -3,6 +3,9 @@ package Primitives;
  * @author Dina Hayoun and Sarah Nezri
  *
  */
+
+import Geometries.Intersectable;
+
 import java.util.List;
 
 import static Primitives.Util.isZero;
@@ -93,4 +96,25 @@ public class Ray {
         }
 
         return  result;}
+
+    /**
+     * get the closest GeoPoint in the list of points
+     * @param points list of intersection points
+     * @return the closest point
+     */
+    public Intersectable.GeoPoint getClosestGeoPoint(List<Intersectable.GeoPoint> points) {
+        if (points == null)
+            return null;
+
+        Intersectable.GeoPoint myPoint = points.get(0);
+
+        for (var point : points
+        ) {
+            if (p0.distance(myPoint.point3D) > p0.distance(point.point3D)) {
+                myPoint = point;
+            }
+        }
+
+        return myPoint;
+    }
 }

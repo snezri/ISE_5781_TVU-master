@@ -5,16 +5,18 @@ import Primitives.Ray;
 import elements.Camera;
 import scene.Scene;
 
+import java.util.List;
 import java.util.MissingResourceException;
+
 /**
  * @author Dina Hayoun and Sarah Nezri
- *
  */
 public class Render {
     ImageWriter imageWriter;
     Camera camera;
     RayTracerBase _rayTracerBase;
     Scene scene;
+    int n;
 
     /**
      * @param imageWriter
@@ -48,6 +50,11 @@ public class Render {
         return this;
     }
 
+    public Render setGridParams(int n) {
+        this.n = n;
+        return this;
+    }
+
     /**
      * The renderImage function doesn't return any value but first it checks if there are no
      * empty value in the attributes otherwise it throws an exception.
@@ -76,6 +83,34 @@ public class Render {
             }
         } catch (MissingResourceException e) {
             throw new UnsupportedOperationException("Not implemented yet" + e.getClassName());
+        }
+    }
+
+    /**
+     * Render the image with implementation of the depth of field
+     */
+    public void renderImageWithDepthOfField() {
+        if (imageWriter == null)
+            throw new MissingResourceException("You need to enter a image writer", ImageWriter.class.getName(), "");
+        if (camera == null)
+            throw new MissingResourceException("You need to enter a camera", Camera.class.getName(), "");
+        if (_rayTracerBase == null)
+            throw new MissingResourceException("You need to enter a ray tracer", RayTracerBase.class.getName(), "");
+
+        for (int i = 0; i < imageWriter.getNy(); i++) {
+            for (int j = 0; j < imageWriter.getNx(); j++) {
+                Ray myRay = camera.constructRayThroughPixel(
+                        imageWriter.getNx(),
+                        imageWriter.getNy(),
+                        j,
+                        i);
+                List<Ray> myRays = camera.constructRaysGridFromCamera(n, n, myRay);
+                Color myColor = new Color(0, 0, 0);
+                for (Ray ray : myRays) {
+                    myColor = myColor.add(_rayTracerBase.traceRay(ray));
+                }
+                imageWriter.writePixel(j, i, myColor.reduce(myRays.size()));
+            }
         }
     }
 

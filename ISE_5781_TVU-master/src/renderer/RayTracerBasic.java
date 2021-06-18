@@ -8,6 +8,8 @@ import scene.Scene;
 
 import java.util.List;
 
+import static Primitives.Util.alignZero;
+
 /**
  * Class RayTracerBasic
  * @author Dina Hayoun and Sarah Nezri
@@ -43,7 +45,7 @@ public class RayTracerBasic extends RayTracerBase {
             return true;
         double lightDistance = light.getDistance(geopoint.point3D);
         for (GeoPoint gp : intersections) {
-            if (Util.alignZero(gp.point3D.distance(geopoint.point3D) - lightDistance) <= 0
+            if (alignZero(gp.point3D.distance(geopoint.point3D) - lightDistance) <= 0
                     && gp.geometry.getMaterial().kT == 0)
                 return false;
         }
@@ -71,7 +73,7 @@ public class RayTracerBasic extends RayTracerBase {
             return 1.0;
         double ktr = 1.0;
         for (GeoPoint gp : intersections) {
-            if (Util.alignZero(gp.point3D.distance(geoPoint.point3D) - lightDistance) <= 0) {
+            if (alignZero(gp.point3D.distance(geoPoint.point3D) - lightDistance) <= 0) {
                 ktr *= gp.geometry.getMaterial().kT;
                 if (ktr < MIN_CALC_COLOR_K)
                     return 0.0;
@@ -96,7 +98,7 @@ public class RayTracerBasic extends RayTracerBase {
      *         no intersection with this ray, return the background color
      *
      */
-    @Override
+  /*  @Override*/
     // public Color traceRay(Ray ray) {
     // List<GeoPoint> intersections = scene.geometries.findGeoIntersections(ray); //
     // Find the intersection and the
@@ -114,6 +116,24 @@ public class RayTracerBasic extends RayTracerBase {
         return closestPoint == null ? scene.background : calcColor(closestPoint, ray);
     }
 
+
+    /**
+     * Get color of the intersection of the ray with the scene
+     *
+     * @param ray Ray to trace
+     * @return Color of intersection
+     */
+/*    @Override
+    public Color traceRay(Ray ray) {
+
+        List<GeoPoint> myPoints = scene.geometries.findGeoIntersections(ray);
+        if (myPoints != null) {
+            GeoPoint myPoint = ray.getClosestGeoPoint(myPoints);
+            return calcColor(myPoint, ray);
+        }
+        return scene.background;
+    }*/
+
     /***
      *
      * @param geopoint
@@ -126,7 +146,7 @@ public class RayTracerBasic extends RayTracerBase {
     // .add(calcLocalEffects(intersection, ray));
     // }
     private Color calcColor(GeoPoint geopoint, Ray ray) {
-        return calcColor(findClosestIntersection(ray), ray, MAX_CALC_COLOR_LEVEL, INITIAL_K)
+        return calcColor(geopoint, ray, MAX_CALC_COLOR_LEVEL, INITIAL_K)
                 .add(scene.ambientLight.getIntensity());
     }
 
@@ -150,13 +170,12 @@ public class RayTracerBasic extends RayTracerBase {
      * @return the color obtained by the reflection and refraction rays
      *
      */
-    private Color calcGlobalEffects(GeoPoint gp, Vector v, int level, double k) {
+   private Color calcGlobalEffects(GeoPoint gp, Vector v, int level, double k) {
         Color color = Color.BLACK;
         Vector n = gp.geometry.getNormal(gp.point3D);
         Material material = gp.geometry.getMaterial();
         double kkr = k * material.kR;
         if (kkr > MIN_CALC_COLOR_K)
-
             color = calcGlobalEffect(constructReflectedRay(gp.point3D, v, n), level, material.kR, kkr);
         double kkt = k * material.kT;
         if (kkt > MIN_CALC_COLOR_K)
@@ -206,7 +225,8 @@ public class RayTracerBasic extends RayTracerBase {
         return color;
     }
 
-    /***
+
+    /**
      *
      * @params kS(reduction factor)
      * @param l(ray                                 from the lamp to the object)
@@ -214,6 +234,7 @@ public class RayTracerBasic extends RayTracerBase {
      * @param dp(dot                                product between l and v)
      * @return the color changed by the refraction
      */
+
 
     Color calcSpecular(double kS, Vector l, Vector n, Vector v, int nShininess, Color lightIntensity, double dp) {
         v = v.normalize();
@@ -228,9 +249,55 @@ public class RayTracerBasic extends RayTracerBase {
      * @param dp(dot       product between l and v)
      * @return the color changed by the diffusion
      */
+
     Color calcDiffusive(double kD, Color lightIntensity, double dp) {
         return lightIntensity.scale(kD * Math.abs(dp));
     }
+
+ /*   *//**
+     * Calculate color of the specular effects of the light
+     *
+     * @param ks specular ratio
+     * @param l light's direction vector
+     * @param n normal vector
+     * @param v ray's direction vector
+     * @param nShininess shininess of the object
+     * @param lightIntensity intensity of the light
+     * @return color of specular effect
+     *//*
+    private Color calcSpecular(double ks, Vector l, Vector n, Vector v, double nShininess, Color lightIntensity) {
+
+        Vector r = l.add(n.scale(n.dotProduct(l) * -2));
+        double vR;
+        try {
+            vR = v.scale(-1).normalized().dotProduct(r.normalized());
+        } catch (Exception exception) {
+            //vR = 0, 0^everything = 1
+            return lightIntensity.scale(1);
+        }
+        //color = ks * max(0, -v.r)^nSh
+        return lightIntensity.scale(ks * Math.pow(Math.max(0, vR), nShininess));
+    }
+
+    *//**
+     * Calculate color of the diffusive effects of the light
+     *
+     * @param kd diffusive ratio
+     * @param l light's direction vector
+     * @param n normal vector
+     * @param lightIntensity intensity of the light
+     * @return color of the diffusive effect
+     *//*
+    private Color calcDiffusive(double kd, Vector l, Vector n, Color lightIntensity) {
+        double lN;
+        try {
+            lN = l.normalized().dotProduct(n.normalized());
+        } catch (Exception exception) {
+            return lightIntensity.scale(0);
+        }
+        //color = light * |l.n| * kd
+        return lightIntensity.scale(Math.abs(lN) * kd);
+    }*/
 
     /**
      * @param p point from where to do the reflected ray, ray from the light to
