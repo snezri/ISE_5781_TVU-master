@@ -104,12 +104,12 @@ public class Render {
                         imageWriter.getNy(),
                         j,
                         i);
-                List<Ray> myRays = camera.constructRaysGridFromCamera(n, n, myRay);
+                List<Ray> myRays = camera.constructRaysGridFromCamera(n, myRay);
                 Color myColor = new Color(0, 0, 0);
-                for (Ray ray : myRays) {
-                    myColor = myColor.add(_rayTracerBase.traceRay(ray));
+                for (Ray ray : myRays) { // we pass in the list myRays and for each ray we found his color
+                    myColor = myColor.add(_rayTracerBase.traceRay(ray)); // we add the color of each ray to myColor
                 }
-                imageWriter.writePixel(j, i, myColor.reduce(myRays.size()));
+                imageWriter.writePixel(j, i, myColor.reduce(myRays.size())); // we reduce myColor with the size of my list (number of rays)
             }
         }
     }
