@@ -27,7 +27,7 @@ public class Camera {
     private double _height;
     private double _distance;       // distance between camera and the view plane
     private double _depthOfField;   // distance between view plane and the depth of field plane
-    private double _dOFRadius;
+    private double _aperture;       // radius of the aperture of the camera
 
     private Point3D getP0() {
         return _p0;
@@ -66,12 +66,12 @@ public class Camera {
         return this;
     }
 
-    public double get_dOFRadius() {
-        return _dOFRadius;
+    public double get_aperture() {
+        return _aperture;
     }
 
-    public Camera set_dOFRadius(int _dOFRadius) {
-        this._dOFRadius = _dOFRadius;
+    public Camera set_aperture(int _aperture) {
+        this._aperture = _aperture;
         return this;
     }
 
@@ -155,27 +155,27 @@ public class Camera {
      * @return it return the list of all the rays from each pixel in the camera
 */
     public List<Ray> constructRaysGridFromCamera(int n,  Ray ray) { // we construct a square around the circle of the camera, the size n=2*radius(aperture)
-                                                                    // we launch a ray (we choose a random point in the pixel)  from each pixel of the grid and
+                                                                    // we launch a ray (we choose a random _focusPoint in the pixel)  from each pixel of the grid and
                                                                     // we select only the ray IN the circle of the camera
 
         List<Ray> myRays = new LinkedList<>(); //the list of all the rays
 
-        double t0 = _depthOfField + _distance; // distance from the central point of the camera to the focus point
-        double t = t0/(_vTo.dotProduct(ray.getDir())); // distance from the point on the aperture grid to the focus point ( calcul with the cosinus)
-        Point3D point = ray.getPoint(t); // we found the focus point
+        double t0 = _depthOfField + _distance; // distance from the central _focusPoint of the camera to the focus _focusPoint
+        double t = t0/(_vTo.dotProduct(ray.getDir())); // distance from the _focusPoint on the aperture grid to the focus _focusPoint ( found with the cosinus)
+        Point3D _focusPoint = ray.getPoint(t); // we found the focus _focusPoint
 
-        double pixelSize = alignZero((_dOFRadius * 2) / n); // the size of each pixel
+        double pixelSize = alignZero((_aperture * 2) / n); // the size of each pixel
 
         // we construct a ray from each pixel of the grid and we select only the rays in the circle
         for (int i = 0; i < n; i++) {
             for (int j = 0; j < n; j++) {
-                Ray tmpRay = constructRayFromPixel(n, n, j, i, pixelSize, point);
+                Ray tmpRay = constructRayFromPixel(n, n, j, i, pixelSize, _focusPoint);
                 // we check if each ray is in the circle of the camera
                 if (tmpRay.getPoint3D().equals(_p0)){// if the ray is from the camera center
                     myRays.add(tmpRay); // we add the ray to the list myRays
                 }
-                else if (tmpRay.getPoint3D().substract(_p0).dotProduct(tmpRay.getPoint3D().substract(_p0)) <= _dOFRadius * _dOFRadius){
-                    // if the distance with the center au carre is <= au carre of the radius -> the ray is in the circle of the camera
+                else if (tmpRay.getPoint3D().substract(_p0).dotProduct(tmpRay.getPoint3D().substract(_p0)) <= _aperture * _aperture){
+                    // if the distance with the center (squared) is <= the square of the radius -> the ray is in the circle of the camera
                     myRays.add(tmpRay); // we add the ray to the list myRays
                 }
             }
@@ -191,15 +191,15 @@ public class Camera {
      * @param j y emplacement of the point
      * @param i x emplacement of the point
      * @param pixelSize size of the pixel
-     * @param point point on the focus plane
+     * @param focusPoint point on the focus plane
      * @return a ray from the pixel to the focus point
      */
 
-    private Ray constructRayFromPixel(int nX, int nY, double j, double i, double pixelSize, Point3D point) {
+    private Ray constructRayFromPixel(int nX, int nY, double j, double i, double pixelSize, Point3D focusPoint) {
 
         Point3D pIJ = new Point3D(_p0);
 
-        Random r = new Random(); // we want a random point for each pixel for more precisison
+        Random r = new Random(); // we want a random point for each pixel for more precision
 
         double xJ = ((j + r.nextDouble() / (r.nextBoolean() ? 2 : -2)) - ((nX - 1) / 2d)) * pixelSize;
         double yI = -((i + r.nextDouble() / (r.nextBoolean() ? 2 : -2)) - ((nY - 1) / 2d)) * pixelSize;
@@ -211,7 +211,7 @@ public class Camera {
             pIJ = pIJ.add(_vUp.scale(yI));
         }
 
-        Vector vIJ = point.substract(pIJ);
+        Vector vIJ = focusPoint.substract(pIJ);
 
         return new Ray(pIJ, vIJ); // return a new ray from a pixel
     }

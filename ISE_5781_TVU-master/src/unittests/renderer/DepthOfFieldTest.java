@@ -15,21 +15,21 @@ import scene.Scene;
 
 public class DepthOfFieldTest {
     @Test
-    public void depthOfFieldTest3() {
+    public void depthOfFieldTest() {
 
-        Scene scene3 = new Scene("basic depth of field test");
+        Scene scene = new Scene("basic depth of field test");
 
-        Camera camera3 = new Camera(new Point3D(0,10,500),new Vector(0,0,-1),new Vector(0,1,0))
+        Camera camera = new Camera(new Point3D(0,10,500),new Vector(0,0,-1),new Vector(0,1,0))
                 .setDistance(450)
                 .setViewPlaneSize(30,30)
                 .set_depthOfField(50)
-                .set_dOFRadius(3);
+                .set_aperture(3);
 
         Material mat = new Material().setKd(0.5).setkT(0.1).setkR(0.8).setKs(0.5).setnShininess(500);
 
-        scene3.lights.add(new DirectionalLight(new Color(300,300,300), new Vector(-1,-1,-1)));
+        scene.lights.add(new DirectionalLight(new Color(300,300,300), new Vector(-1,-1,-1)));
 
-        scene3.geometries.add(
+        scene.geometries.add(
                 new Sphere(3, new Point3D(6,12,-100)).setEmission(new Color(180,0,0)).setMaterial(mat),
                 new Sphere(3, new Point3D(3,9,-50)).setEmission(new Color(180,200,0)).setMaterial(mat),
                 new Sphere(3, new Point3D(0,6,0)).setEmission(new Color(0,0,180)).setMaterial(mat),
@@ -39,8 +39,8 @@ public class DepthOfFieldTest {
 
         Render render = new Render() //
                 .setImageWriter(new ImageWriter("depth", 500, 500)) //
-                .setCamera(camera3) //
-                .setRayTracerBase(new RayTracerBasic(scene3))
+                .setCamera(camera) //
+                .setRayTracerBase(new RayTracerBasic(scene))
                 .setGridParams(8);
         render.renderImageWithDepthOfField();
         render.writeToImage();
